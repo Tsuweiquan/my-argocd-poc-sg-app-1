@@ -52,12 +52,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Generate Truncated Github SHA
+        run: echo "GITHUB_SHA_TRUNCATED=${ GITHUB_SHA::8 }" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:dev-${GITHUB_SHA::8}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:dev-${{ env.GITHUB_SHA_TRUNCATED}}
           platforms: linux/amd64,linux/arm64
 
   # deploy:
