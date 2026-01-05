@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -35,6 +37,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}/Dockerfile
+          context: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:dev
