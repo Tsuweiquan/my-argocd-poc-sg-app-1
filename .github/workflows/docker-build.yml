@@ -11,6 +11,7 @@ on:
 
 env:
   APPLICATION_NAME: map-singapore-app
+  DOCKERFILE_PATH: dockerimages
 
 jobs:
   docker-build:
@@ -34,5 +35,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
+          file: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:dev
