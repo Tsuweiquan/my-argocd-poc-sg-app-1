@@ -1,37 +1,15 @@
 # This github workflow will build the docker image and push it to the container registry
-name: Docker-Build-and-Push-to-Docker-Hub
-run-name: ${{ github.actor }} is running Docker Build & Push to Docker Hub
+name: DEV CD
+run-name: ${{ github.actor }} is running DEV CD
 on:
   push:
     branches:
       - dev
-  pull_request:
-    branches:
-      - dev
-
 env:
   APPLICATION_NAME: map-singapore-app
   DOCKERFILE_PATH: dockerimages
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Setup Environment and run Unit Test
-        run: |
-          echo "Running tests for ${{ env.APPLICATION_NAME }}"
-          echo "Unit Test Complete"
-
-      - name: Run Integration Test
-        run: |
-          echo "Running Integration tests for ${{ env.APPLICATION_NAME }}"
-          echo "Integration Test Complete"
-
   docker-build-and-push:
     runs-on: ubuntu-latest
     steps:
@@ -66,7 +44,6 @@ jobs:
   # deploy:
   #   runs-on: ubuntu-latest
   #   needs:
-  #     - tests
   #     - docker-build-and-push
   #   # Clone gitops-repo
   #   # sed -i "s/image:.*/image: yourapp@${{ needs.build-push.outputs.image-digest }}/" clusters/dev/app.yaml
