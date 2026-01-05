@@ -38,6 +38,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}
-          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:dev
