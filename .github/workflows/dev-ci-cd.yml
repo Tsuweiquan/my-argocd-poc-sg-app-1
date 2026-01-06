@@ -115,26 +115,18 @@ jobs:
       - name: Update Tag Version in YAML & Push
         uses: fjogeleit/yaml-update-action@main
         with:
-          repository: ${{ env.GITOPS_REPO }}
           method: Update
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
-          commitChange: true
-          message: "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          createPR: false
-          masterBranchName: main
-          branch: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commitUserName: "github-actions[bot]"
-          commitUserEmail: "github-actions[bot]@users.noreply.github.com"
+          commitChange: false
 
-      # - name: Push changes
-      #   run: |
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      #     git config --global user.name "github-actions[bot]"
-      #     git status
-      #     git --no-pager diff
-      #     git add .
-      #     git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-      #     git push
+      - name: Push changes
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git status
+          git --no-pager diff
+          git add .
+          git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
+          git push
