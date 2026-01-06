@@ -73,8 +73,8 @@ jobs:
             TAG_VERSION="$(cat $VERSION_TXT_FILEPATH)"
           fi
           echo $TAG_VERSION
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "TAG_VERSION=$TAG_VERSION" >> "$GITHUB_ENV"
+          echo "TAG_VERSION=$TAG_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build and push
         id: build-and-push
@@ -94,11 +94,14 @@ jobs:
       - docker-build-and-push
 
     steps:
-      - name: Process previous Job outputs
+      - env:
+          image-digest: ${{ needs.docker-build-and-push.outputs.image-digest }}
+          image-id: ${{ needs.docker-build-and-push.outputs.image-id }}
+          tag-version: ${{ needs.docker-build-and-push.outputs.TAG_VERSION }}
         run: |
-          echo "image-digest=${{ needs.docker-build-and-push.outputs.image-digest }}" >> $GITHUB_ENV
-          echo "image-id=${{ needs.docker-build-and-push.outputs.image-id }}" >> $GITHUB_ENV
-          echo "tag-version=${{ needs.docker-build-and-push.outputs.TAG_VERSION }}" >> $GITHUB_ENV
+          echo "image-digest=${{ env.image-digest }}"
+          echo "image-id=${{ env.image-id }}"
+          echo "tag-version=${{ env.tag-version }}"
 
       - name: Checkout Repository
         uses: actions/checkout@v5
