@@ -87,8 +87,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     needs:
       - tests
       - docker-build-and-push
@@ -112,16 +110,9 @@ jobs:
           show-progress: true
           fetch-depth: 0
 
-      - name: Sanity Check
-        run: |
-          pwd
-          ls -alth
-          git status
-
       - name: Update Tag Version in YAML & Push
         uses: fjogeleit/yaml-update-action@main
         with:
-          repository: ${{ env.GITOPS_REPO }}
           method: Update
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
@@ -133,3 +124,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commitUserName: "github-actions[bot]"
           commitUserEmail: "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push changes
+        run: |
+          git status
+          git push
