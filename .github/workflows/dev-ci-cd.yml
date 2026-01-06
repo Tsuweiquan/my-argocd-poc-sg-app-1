@@ -128,7 +128,10 @@ jobs:
 
       - name: Push changes
         run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git status
+          git --no-pager diff
           git add .
           git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
           git push
