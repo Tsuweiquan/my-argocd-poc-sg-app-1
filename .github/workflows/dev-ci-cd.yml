@@ -120,6 +120,7 @@ jobs:
           commitChange: true
           message: "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
           createPR: false
+          masterBranchName: main
           branch: main
           token: ${{ secrets.GITHUB_TOKEN }}
           commitUserName: "github-actions[bot]"
