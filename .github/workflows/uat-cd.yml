@@ -1,6 +1,6 @@
 # This github workflow will build the docker image and push it to the container registry
-name: UAT Build-Push-Deploy
-run-name: ${{ github.actor }} is running UAT Build-Push-Deploy
+name: UAT CI & CD
+run-name: ${{ github.actor }} is running UAT CI & CD
 on:
   push:
     branches:
@@ -101,26 +101,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v5
         with:
-          repository: Tsuweiquan/my-argocd-poc-gitops
+          repository: ${{ env.GITOPS_REPO }}
           ref: "main"
           token: ${{ secrets.PAT_TOKEN }}
           show-progress: true
           fetch-depth: 0
 
-      - name: Update Tag Version in YAML & Push
+      - name: Update Tag Version in YAML & Create PR
         uses: fjogeleit/yaml-update-action@v0.16.1
         with:
           method: Update
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
-          commitChange: true
-          createPR: true
-          title: "Release ${{ env.APPLICATION_NAME }} --> ${{ env.TAG_VERSION }} to ${{ env.ENVIRONMENT }} environment"
-          commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          commitUser: "github-actions[Deployment Bot]"
-          commitEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
-          message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
+          repository: ${{ env.GITOPS_REPO }}
           branch: "release/${{ env.APPLICATION_NAME }}-${{ env.TAG_VERSION }}"
           targetBranch: "main"
+          createPR: true
+          title: "Release ${{ env.APPLICATION_NAME }} --> ${{ env.TAG_VERSION }} to ${{ env.ENVIRONMENT }} environment"
+          message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
           token: ${{ secrets.PAT_TOKEN }}

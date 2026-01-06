@@ -1,6 +1,6 @@
 # This github workflow will build the docker image and push it to the container registry
-name: DEV Build-Push-Deploy
-run-name: ${{ github.actor }} is running DEV Build-Push-Deploy
+name: DEV CI & CD
+run-name: ${{ github.actor }} is running DEV CI & CD
 on:
   push:
     branches:
@@ -67,7 +67,7 @@ jobs:
         id: generate-tag-version
         run: |
           VERSION_TXT_FILEPATH="${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}/version.txt"
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]] || [[ "${{ github.ref }}" == "refs/heads/feature/*" ]]; then
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]] && [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
             TAG_VERSION="SNAPSHOT-$(cat $VERSION_TXT_FILEPATH)"
           else
             TAG_VERSION="$(cat $VERSION_TXT_FILEPATH)"
@@ -119,15 +119,11 @@ jobs:
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
-          commitChange: false
-
-      - name: Push changes
-        run: |
-          git remote set-url origin https://github-actions:${{ secrets.PAT_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
-          git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[Deployment Bot]"
-          git status
-          git --no-pager diff
-          git add .
-          git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          git push
+          repository: ${{ env.GITOPS_REPO }}
+          commitChange: true
+          targetBranch: "main"
+          masterBranchName: "main"
+          message: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
+          commitUserName: "github-actions[Deployment Bot]"
+          commitUserEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
+          token: ${{ secrets.PAT_TOKEN }}
