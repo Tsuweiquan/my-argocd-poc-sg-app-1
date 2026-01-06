@@ -1,6 +1,6 @@
 # This github workflow will build the docker image and push it to the container registry
 name: DEV CI & CD
-run-name: ${{ github.actor }} is running DEV CI & CD on ${{ github.ref }}
+run-name: ${{ github.actor }} is running DEV CI & CD
 on:
   push:
     branches:
