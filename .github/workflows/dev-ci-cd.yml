@@ -115,6 +115,7 @@ jobs:
       - name: Update Tag Version in YAML & Push
         uses: fjogeleit/yaml-update-action@main
         with:
+          repository: ${{ env.GITOPS_REPO }}
           method: Update
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
