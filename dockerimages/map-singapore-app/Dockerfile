@@ -2,5 +2,6 @@
 FROM httpd:2.4.66
 
 COPY version.txt /tmp/version.txt
-RUN echo "window.APP_VERSION = '$(cat /tmp/version.txt | tr -d '\n')';" > /usr/share/nginx/html/version.js
+RUN APP_VERSION="$(cat /tmp/version.txt | tr -d '\n')"
 COPY index.html /usr/local/apache2/htdocs/index.html
+RUN sed -i "s/versionNumber/$APP_VERSION/g" /usr/local/apache2/htdocs/index.html

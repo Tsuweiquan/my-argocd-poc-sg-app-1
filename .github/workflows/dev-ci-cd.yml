@@ -1,6 +1,6 @@
 # This github workflow will build the docker image and push it to the container registry
-name: Docker-Build-and-Push-to-Docker-Hub
-run-name: ${{ github.actor }} is running Docker Build & Push to Docker Hub
+name: Build-Push-Deploy
+run-name: ${{ github.actor }} is running Build-Push-Deploy
 on:
   push:
     branches:
