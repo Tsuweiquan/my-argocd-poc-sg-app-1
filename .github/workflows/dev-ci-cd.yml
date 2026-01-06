@@ -67,7 +67,7 @@ jobs:
         id: generate-tag-version
         run: |
           VERSION_TXT_FILEPATH="${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}/version.txt"
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]] || [[ "${{ github.ref }}" == "refs/heads/feature/*" ]]; then
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]] && [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
             TAG_VERSION="SNAPSHOT-$(cat $VERSION_TXT_FILEPATH)"
           else
             TAG_VERSION="$(cat $VERSION_TXT_FILEPATH)"
@@ -123,25 +123,7 @@ jobs:
           commitChange: true
           targetBranch: "main"
           masterBranchName: "main"
-          # commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          # commitUser: "github-actions[Deployment Bot]"
+          message: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
+          commitUserName: "github-actions[Deployment Bot]"
           commitUserEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
           token: ${{ secrets.PAT_TOKEN }}
-
-      # - name: Push changes
-      #   id: push-changes-to-gitops-repo
-      #   run: |
-      #     git remote set-url origin https://github-actions:${{ secrets.PAT_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
-      #     git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
-      #     git config --global user.name "github-actions[Deployment Bot]"
-      #     git status
-      #     if git diff --quiet HEAD~1..HEAD; then
-      #       echo "No changes detected. Skipping job."
-      #       exit 0
-      #     else
-      #       echo "Changes detected. Pushing changes to gitops repo."
-      #       git --no-pager diff
-      #       git add .
-      #       git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-      #       git push
-      #     fi
