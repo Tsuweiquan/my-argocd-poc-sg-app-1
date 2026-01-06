@@ -12,6 +12,8 @@ on:
       - feature/*
 
 env:
+  REGION: singapore
+  ENVIRONMENT: dev
   APPLICATION_NAME: map-singapore-app
   DOCKERFILE_PATH: dockerimages
   GITOPS_REPO: Tsuweiquan/my-argocd-poc-gitops
@@ -100,8 +102,8 @@ jobs:
           show-progress: true
           sparse-checkout: .
 
-      # - name: Update gitops-repo
-      #   run: |
-      #     sed -i "s/image:.*/image: yourapp@${{ needs.build-push.outputs.image-digest }}/" clusters/dev/app.yaml
-      #     git commit -m "chore(dev): bump map-singapore-app to dev-${GITHUB_SHA::8}"
-  # git push origin main  # GitOps repo main branch
+      - name: Update Tag Version in YAML
+        uses: fjogeleit/yaml-update-action@v1
+        with:
+          changes: |
+            clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml@{.tag=${{ env.image-id }}}
