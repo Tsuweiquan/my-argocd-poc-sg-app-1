@@ -121,8 +121,8 @@ jobs:
           value: ${{ env.tag-version }}
           commitChange: true
           targetBranch: "main"
-          commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          commitUser: "github-actions[Deployment Bot]"
+          # commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
+          # commitUser: "github-actions[Deployment Bot]"
           commitUserEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
           token: ${{ secrets.PAT_TOKEN }}
 
