@@ -87,6 +87,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - tests
       - docker-build-and-push
