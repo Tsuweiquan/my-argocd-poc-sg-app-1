@@ -43,7 +43,7 @@ jobs:
     outputs:
       image-digest: ${{ steps.build-and-push.outputs.digest }}
       image-id: ${{ steps.build-and-push.outputs.imageid }}
-      tag-version: ${{ steps.generate-tag-version.outputs.TAG_VERSION }}
+      tag-version: ${{ steps.generate-tag-version.outputs.tag-version }}
 
     steps:
       - name: Checkout Repository
@@ -74,7 +74,7 @@ jobs:
           fi
           echo $TAG_VERSION
           echo "TAG_VERSION=$TAG_VERSION" >> "$GITHUB_ENV"
-          echo "TAG_VERSION=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag-version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build and push
         id: build-and-push
@@ -97,7 +97,7 @@ jobs:
       - env:
           image-digest: ${{ needs.docker-build-and-push.outputs.image-digest }}
           image-id: ${{ needs.docker-build-and-push.outputs.image-id }}
-          tag-version: ${{ needs.docker-build-and-push.outputs.TAG_VERSION }}
+          tag-version: ${{ needs.docker-build-and-push.outputs.tag-version }}
         run: |
           echo "image-digest=${{ env.image-digest }}"
           echo "image-id=${{ env.image-id }}"
