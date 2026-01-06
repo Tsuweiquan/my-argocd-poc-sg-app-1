@@ -111,6 +111,7 @@ jobs:
 
       - name: Update Tag Version in YAML & Create PR
         uses: fjogeleit/yaml-update-action@v0.16.1
+        id: update-yaml-and-create-pr
         with:
           method: Update
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
@@ -125,3 +126,12 @@ jobs:
           message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
           token: ${{ secrets.PAT_TOKEN }}
           commitChange: true
+
+      - name: Get PR Details
+        id: get-pr-details
+        env:
+          commit: ${{ steps.update-yaml-and-create-pr.outputs.commit }}
+          pull_request: ${{ steps.update-yaml-and-create-pr.outputs.pull_request }}
+        run: |
+          echo "Git Commit SHA: ${{ env.commit }}"
+          echo "Git PR Information: ${{ env.pull_request }}"
