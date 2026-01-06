@@ -7,6 +7,11 @@
 
 <body>
     <p>This page serves the singapore app</p>
+    <p>Version: <span id="version">-</span></p>
+    <script src="/version.js"></script>
+    <script>
+        document.getElementById('version').textContent = window.APP_VERSION;
+    </script>
 </body>
 
 </html>

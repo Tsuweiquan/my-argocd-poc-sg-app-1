@@ -102,16 +102,17 @@ jobs:
           show-progress: true
           sparse-checkout: .
 
-      - name: Update Tag Version in YAML
-        uses: fjogeleit/yaml-update-action@v1
+      - name: Update Tag Version in YAML & Push
+        uses: fjogeleit/yaml-update-action@main
         with:
-          changes: |
-            clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml@{.tag=${{ env.image-id }}}
-
-      - name: Commit and Push
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add .
-          git commit -m "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} - Commit Hash: ${{ github.sha }}"
-          git push
+          method: Update
+          valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
+          propertyPath: "image.tag"
+          value: ${{ env.image-id }}
+          commitChange: true
+          message: "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} - Commit Hash: ${{ github.sha }}"
+          createPR: false
+          branch: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commitUserName: "github-actions[bot]"
+          commitUserEmail: "github-actions[bot]@users.noreply.github.com"
