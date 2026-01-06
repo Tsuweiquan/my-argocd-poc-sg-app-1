@@ -117,7 +117,7 @@ jobs:
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
-          commitChange: true
+          commitChange: false
           message: "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
           createPR: false
           masterBranchName: main
@@ -129,4 +129,6 @@ jobs:
       - name: Push changes
         run: |
           git status
+          git add .
+          git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
           git push
