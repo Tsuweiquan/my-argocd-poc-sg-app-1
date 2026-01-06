@@ -119,6 +119,7 @@ jobs:
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
+          repository: ${{ env.GITOPS_REPO }}
           commitChange: true
           targetBranch: "main"
           # commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
