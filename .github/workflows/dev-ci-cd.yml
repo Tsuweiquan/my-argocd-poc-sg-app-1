@@ -108,7 +108,7 @@ jobs:
         with:
           repository: Tsuweiquan/my-argocd-poc-gitops
           ref: "main"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           show-progress: true
           fetch-depth: 0
 
@@ -123,7 +123,7 @@ jobs:
 
       - name: Push changes
         run: |
-          git remote set-url origin https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
+          git remote set-url origin https://github-actions:${{ secrets.PAT_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git status
