@@ -1,19 +1,14 @@
 # This github workflow will build the docker image and push it to the container registry
-name: DEV Build-Push-Deploy
-run-name: ${{ github.actor }} is running DEV Build-Push-Deploy
+name: UAT Build-Push-Deploy
+run-name: ${{ github.actor }} is running UAT Build-Push-Deploy
 on:
   push:
     branches:
-      - dev
-      - feature/*
-  pull_request:
-    branches:
-      - dev
-      - feature/*
+      - main
 
 env:
   REGION: singapore
-  ENVIRONMENT: dev
+  ENVIRONMENT: uat
   APPLICATION_NAME: map-singapore-app
   DOCKERFILE_PATH: dockerimages
   GITOPS_REPO: Tsuweiquan/my-argocd-poc-gitops
@@ -119,15 +114,13 @@ jobs:
           valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
-          commitChange: false
-
-      - name: Push changes
-        run: |
-          git remote set-url origin https://github-actions:${{ secrets.PAT_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
-          git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[Deployment Bot]"
-          git status
-          git --no-pager diff
-          git add .
-          git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
-          git push
+          commitChange: true
+          createPR: true
+          title: "Release ${{ env.APPLICATION_NAME }} --> ${{ env.TAG_VERSION }} to ${{ env.ENVIRONMENT }} environment"
+          commitMessage: "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
+          commitUser: "github-actions[Deployment Bot]"
+          commitEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
+          message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
+          branch: "release/${{ env.APPLICATION_NAME }}-${{ env.TAG_VERSION }}"
+          targetBranch: "main"
+          token: ${{ secrets.PAT_TOKEN }}
