@@ -1,6 +1,6 @@
 # This github workflow will build the docker image and push it to the container registry
 name: UAT CI & CD
-run-name: ${{ github.actor }} is running UAT CI & CD
+run-name: ${{ github.actor }} is running UAT CI & CD on ${{ github.ref }}
 on:
   push:
     branches:
