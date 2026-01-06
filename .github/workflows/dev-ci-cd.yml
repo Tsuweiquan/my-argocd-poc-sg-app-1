@@ -121,7 +121,21 @@ jobs:
           value: ${{ env.tag-version }}
           commitChange: false
 
+      - name: Check for any changes
+        id: diff-check
+        run: |
+          if git diff --quiet HEAD~1..HEAD; then
+            echo "no_changes=true" >> $GITHUB_ENV
+            echo "No changes detected. Skipping job." && exit 0
+          else
+            echo "no_changes=false" >> $GITHUB_ENV
+            echo "Changes detected. Proceeding."
+          fi
+        continue-on-error: true
+
       - name: Push changes
+        id: push-changes-to-gitops-repo
+        if: ${{ env.no_changes != 'true' }}
         run: |
           git remote set-url origin https://github-actions:${{ secrets.PAT_TOKEN }}@github.com/${{ env.GITOPS_REPO }}.git
           git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
