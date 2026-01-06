@@ -107,3 +107,11 @@ jobs:
         with:
           changes: |
             clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml@{.tag=${{ env.image-id }}}
+
+      - name: Commit and Push
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add .
+          git commit -m "[${{ env.ENVIRONMENT }}] - Update tag version in YAML for ${{ env.APPLICATION_NAME }} - Commit Hash: ${{ github.sha }}"
+          git push
