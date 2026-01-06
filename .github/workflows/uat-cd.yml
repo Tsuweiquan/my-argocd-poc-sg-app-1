@@ -115,9 +115,9 @@ jobs:
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
           repository: ${{ env.GITOPS_REPO }}
-          branch: "release/${{ env.APPLICATION_NAME }}-${{ env.TAG_VERSION }}"
+          branch: "release/${{ env.APPLICATION_NAME }}-${{ env.tag-version }}"
           targetBranch: "main"
           createPR: true
-          title: "Release ${{ env.APPLICATION_NAME }} --> ${{ env.TAG_VERSION }} to ${{ env.ENVIRONMENT }} environment"
+          title: "Release ${{ env.APPLICATION_NAME }} --> ${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
           message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
           token: ${{ secrets.PAT_TOKEN }}
