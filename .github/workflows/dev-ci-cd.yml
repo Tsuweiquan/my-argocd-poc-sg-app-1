@@ -128,12 +128,12 @@ jobs:
           git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
           git config --global user.name "github-actions[Deployment Bot]"
           git status
-          git --no-pager diff
-
           if git diff --quiet HEAD~1..HEAD; then
-            echo "no_changes=true" >> $GITHUB_ENV
-            echo "No changes detected. Skipping job." && exit 0
+            echo "No changes detected. Skipping job."
+            exit 0
           else
+            echo "Changes detected. Pushing changes to gitops repo."
+            git --no-pager diff
             git add .
             git commit -m "Update tag version in YAML for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }} - Commit Hash: ${{ github.sha }}"
             git push
