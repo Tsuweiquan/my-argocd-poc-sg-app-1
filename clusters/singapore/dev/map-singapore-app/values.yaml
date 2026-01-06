@@ -1,0 +1,13 @@
+replicaCount: 1
+image:
+  repository: tsuweiquan/map-singapore-app
+  pullPolicy: IfNotPresent
+  tag: ''
+httpRoute:
+  hostnames:
+    - sg-app-dev.sg.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
