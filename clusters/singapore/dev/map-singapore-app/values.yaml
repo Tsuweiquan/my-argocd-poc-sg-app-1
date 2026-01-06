@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: tsuweiquan/map-singapore-app
   pullPolicy: IfNotPresent
-  tag: ''
+  tag: SNAPSHOT-1.1.0
 httpRoute:
   hostnames:
     - sg-app-dev.sg.local
