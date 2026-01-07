@@ -35,6 +35,8 @@ jobs:
 
   docker-build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     outputs:
       image-digest: ${{ steps.build-and-push.outputs.digest }}
       image-id: ${{ steps.build-and-push.outputs.imageid }}
