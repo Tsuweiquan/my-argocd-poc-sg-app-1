@@ -87,10 +87,24 @@ jobs:
         run: |
           git config --global user.email "github-actions[Deployment Bot]@users.noreply.github.com"
           git config --global user.name "github-actions[Deployment Bot]"
-
           TAG_NAME="${{ env.TAG_VERSION }}"
           git tag -a $TAG_NAME -m "Automated tag for commit ${{ github.sha }}. Application Version: ${{ env.TAG_VERSION }}"
           git push origin $TAG_NAME
+
+      - name: Create Github Release
+        id: create_release
+        uses: comnoco/create-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.TAG_VERSION }}
+          release_name: Release ${{env.APPLICATION_NAME}}:${{ env.TAG_VERSION }}
+          # body: |
+          #   Changes in this Release
+          #   - First Change
+          #   - Second Change
+          # draft: false
+          # prerelease: false
 
   deploy:
     permissions:
