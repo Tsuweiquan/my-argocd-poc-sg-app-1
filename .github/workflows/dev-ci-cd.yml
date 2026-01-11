@@ -116,7 +116,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@v0.16.1
         with:
           method: Update
-          valueFile: "clusters/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
+          valueFile: "applications-values/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
           repository: ${{ env.GITOPS_REPO }}
