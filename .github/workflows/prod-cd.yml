@@ -2,6 +2,7 @@
 name: PROD CI & CD
 run-name: ${{ github.actor }} is running PROD CI & CD
 on:
+  workflow_dispatch: # Enables gh workflow run command
   push:
     tags:
       - "*"

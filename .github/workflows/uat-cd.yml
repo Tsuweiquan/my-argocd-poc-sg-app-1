@@ -161,3 +161,9 @@ jobs:
         run: |
           echo "Git Commit SHA: ${{ env.commit }}"
           echo "Git PR Information: ${{ env.pull_request }}"
+
+      - name: Trigger prod workflow to prepare promotion PR
+        run: |
+          gh workflow run prod-cd.yml --repo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
