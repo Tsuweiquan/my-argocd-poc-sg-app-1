@@ -17,9 +17,19 @@ The pipeline will run unit test and integration test
 5. Update tag version in YAML file of `Tsuweiquan/my-argocd-poc-gitops` repository in main branch
 6. Argocd watching the gitops repository and will update the application in DEV environment automatically
 
-# CI CD Pipeline for UAT
+# CI Pipeline for UAT
 
 On Pull Request to
+- main branch
+
+The pipeline will run unit test and integration test
+1. Checkout the repository
+2. Setup environment and run unit test
+3. Run integration test
+
+
+# CD Pipeline for UAT
+On Push to
 - main branch
 
 The pipeline will run unit test and integration test
@@ -34,6 +44,7 @@ The pipeline will run unit test and integration test
 8. Create a release PR in `Tsuweiquan/my-argocd-poc-gitops` repository
 9. `<Pending manual review from approvals and merge to main branch>`
 10. After merged, Argocd watching the gitops repository and will update the application in UAT environment automatically
+11. Trigger prod workflow to prepare promotion PR
 
 # CI CD Pipeline for PROD
 

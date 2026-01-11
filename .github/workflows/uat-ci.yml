@@ -76,6 +76,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DOCKERFILE_PATH }}/${{ env.APPLICATION_NAME }}
-          push: true
+          push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.APPLICATION_NAME }}:${{ env.TAG_VERSION }}
           platforms: linux/amd64,linux/arm64
