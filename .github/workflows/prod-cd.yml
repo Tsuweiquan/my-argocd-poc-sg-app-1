@@ -3,9 +3,6 @@ name: PROD CI & CD
 run-name: ${{ github.actor }} is running PROD CI & CD
 on:
   workflow_dispatch: # Enables gh workflow run command
-  push:
-    tags:
-      - "*"
 
 env:
   REGION: singapore
@@ -104,29 +101,45 @@ jobs:
           show-progress: true
           fetch-depth: 0
 
-      - name: Update Tag Version in YAML & Create PR
+      - name: Update Tag Version in YAML & Push
         uses: fjogeleit/yaml-update-action@v0.16.1
-        id: update-yaml-and-create-pr
         with:
           method: Update
           valueFile: "applications-values/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
           repository: ${{ env.GITOPS_REPO }}
-          branch: "promote/${{ env.APPLICATION_NAME }}-${{ env.tag-version }}"
+          commitChange: true
           targetBranch: "main"
           masterBranchName: "main"
-          createPR: true
-          title: "Promote ${{ env.APPLICATION_NAME }}:${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
-          message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
+          message: "Promote ${{ env.APPLICATION_NAME }}:${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
+          commitUserName: "github-actions[Deployment Bot]"
+          commitUserEmail: "github-actions[Deployment Bot]@users.noreply.github.com"
           token: ${{ secrets.PAT_TOKEN }}
-          commitChange: true
 
-      - name: Get PR Details
-        id: get-pr-details
-        env:
-          commit: ${{ steps.update-yaml-and-create-pr.outputs.commit }}
-          pull_request: ${{ steps.update-yaml-and-create-pr.outputs.pull_request }}
-        run: |
-          echo "Git Commit SHA: ${{ env.commit }}"
-          echo "Git PR Information: ${{ env.pull_request }}"
+      # - name: Update Tag Version in YAML & Create PR
+      #   uses: fjogeleit/yaml-update-action@v0.16.1
+      #   id: update-yaml-and-create-pr
+      #   with:
+      #     method: Update
+      #     valueFile: "applications-values/${{ env.REGION }}/${{ env.ENVIRONMENT }}/${{ env.APPLICATION_NAME }}/values.yaml"
+      #     propertyPath: "image.tag"
+      #     value: ${{ env.tag-version }}
+      #     repository: ${{ env.GITOPS_REPO }}
+      #     branch: "promote/${{ env.APPLICATION_NAME }}-${{ env.tag-version }}"
+      #     targetBranch: "main"
+      #     masterBranchName: "main"
+      #     createPR: true
+      #     title: "Promote ${{ env.APPLICATION_NAME }}:${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
+      #     message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
+      #     token: ${{ secrets.PAT_TOKEN }}
+      #     commitChange: true
+
+      # - name: Get PR Details
+      #   id: get-pr-details
+      #   env:
+      #     commit: ${{ steps.update-yaml-and-create-pr.outputs.commit }}
+      #     pull_request: ${{ steps.update-yaml-and-create-pr.outputs.pull_request }}
+      #   run: |
+      #     echo "Git Commit SHA: ${{ env.commit }}"
+      #     echo "Git PR Information: ${{ env.pull_request }}"
