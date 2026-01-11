@@ -56,3 +56,40 @@ The pipeline will run unit test and integration test
 5. Argocd watching the gitops repository is ready to sync the application to PROD environment but will not do so automatically. It will show Out Of Sync in argocd.
 6. `<Pending manual sync from deployment team in argocd>`
 7. Sync the prod application in argocd when ready to deploy the version to PROD environment
+
+# Pros:
+✅ [x] Single main branch only
+✅ [x] Directory-based (dev/ uat/ prod/)
+✅ [x] DEV auto, UAT auto, PROD manual sync
+✅ [x] Snapshot tags for dev, version tags for UAT+
+✅ [x] Manual gates preserved (PR approval before merge to UAT, workflow dispatch for PROD)
+✅ [x] Tests before every deployment
+✅ [x] GitHub releases for audit trail
+
+# Cons
+
+❌ Risk: Teams running pipelines concurrently → git push rejections/merge conflicts
+    - 3 pipelines → 3 files → main branch simultaneously
+    - DEV: updating dev/values.yaml  
+    - UAT: updating uat/values.yaml
+    - PROD: updating prod/values.yaml
+
+❌ gitops-repo main = DEV + UAT + PROD configs
+    - lack of isolation
+❌ One bad DEV pipeline = corrupts UAT/PROD values.yaml
+    - DEV pipeline accidentally corrupts UAT/PROD values.yaml can be disastrous
+    - minimum damage is uat gets broken automatically due to dev pipeline
+    - maximum damage is someone does an argocd sync for prod and it consumes the bad values.yaml updated by DEV pipeline
+❌ Repo-wide secrets in same repo (security violation)
+    - every application repo has the same secret to access to gitops repo
+❌ Adding new app = update 3 pipelines manually
+❌ App rename = update 3 pipelines + 3 ArgoCD apps
+
+
+# To Improve:
+1. PATH VALIDATION in every pipeline step
+2. Branch protection: require 2 approvals for main branch
+3. Use repos-per-environment:
+    - dev-gitops repo
+    - uat-gitops repo
+    - prod-gitops repo
