@@ -112,11 +112,11 @@ jobs:
           propertyPath: "image.tag"
           value: ${{ env.tag-version }}
           repository: ${{ env.GITOPS_REPO }}
-          branch: "release/${{ env.APPLICATION_NAME }}-${{ env.tag-version }}"
+          branch: "promote/${{ env.APPLICATION_NAME }}-${{ env.tag-version }}"
           targetBranch: "main"
           masterBranchName: "main"
           createPR: true
-          title: "Release ${{ env.APPLICATION_NAME }}:${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
+          title: "Promote ${{ env.APPLICATION_NAME }}:${{ env.tag-version }} to ${{ env.ENVIRONMENT }} environment"
           message: "Update Image Version for ${{ env.APPLICATION_NAME }} to ${{ env.tag-version }}"
           token: ${{ secrets.PAT_TOKEN }}
           commitChange: true
